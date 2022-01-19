@@ -1,0 +1,8 @@
+resources:
+  - 00_ueransim-gnb-sa.yaml
+  - 01_ueransim-gnb-rbac.yaml
+  - 02_ueransim-gnb-configmap.yaml
+  - 03_ueransim-gnb-service.yaml
+  - 05_ueransim-gnb-deployment.yaml
+
+namespace: f5gc

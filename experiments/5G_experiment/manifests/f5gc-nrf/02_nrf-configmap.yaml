@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5gc-nrf-config
+data:
+
+  nrfcfg.conf: |
+    info:
+      version: 1.0.0
+      description: NRF initial local configuration
+    
+    configuration:
+      MongoDBName: "free5gc"
+      MongoDBUrl: "mongodb://f5gc-mongodb:27017"
+      sbi:
+        scheme: http
+        registerIPv4: f5gc-nrf
+        ipv4Addr: 0.0.0.0
+        port: 29510
+      DefaultPlmnId:
+        mcc: "208"
+        mnc: "93"
+      serviceNameList:
+        - nnrf-nfm
+        - nnrf-disc
+
+    logger:
+    NRF:
+      debugLevel: info
+      ReportCaller: false
+    PathUtil:
+      debugLevel: info
+      ReportCaller: false
+    OpenApi:
+      debugLevel: info
+      ReportCaller: false
+    MongoDBLibrary:
+      debugLevel: info
+      ReportCaller: false

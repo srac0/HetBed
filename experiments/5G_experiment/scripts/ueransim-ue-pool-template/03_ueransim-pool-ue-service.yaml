@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ueransim-ue
+  name: ueransim-ue
+spec:
+  type: ClusterIP
+  ports:
+  - name: ueransim-ue-n1n2
+    port: 38413
+    protocol: SCTP
+    targetPort: 38413
+  selector:
+    app: ueransim-ue

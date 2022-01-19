@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5gc-amf-config
+data:
+  amfcfg.conf: |
+    info:
+      version: 1.0.2
+      description: AMF initial local configuration
+    
+    configuration:
+      amfName: AMF
+      ngapIpList:
+        - 0.0.0.0                 # assigned to a second network interface
+      sbi:
+        scheme: http
+        registerIPv4: f5gc-amf         # Can also be a kubernetes service IP or domain name.
+        bindingIPv4: 0.0.0.0           # Can also be an ENV.
+        port: 29518
+      serviceNameList:
+        - namf-comm
+        - namf-evts
+        - namf-mt
+        - namf-loc
+        - namf-oam
+      servedGuamiList:
+        - plmnId:
+            mcc: 208
+            mnc: 93
+          amfId: cafe00
+      supportTaiList:
+        - plmnId:
+            mcc: 208
+            mnc: 93
+          tac: 1
+      plmnSupportList:
+        - plmnId:
+            mcc: 208
+            mnc: 93
+          snssaiList:
+            - sst: 1
+              sd: 010203
+            - sst: 2
+              sd: 112233
+            - sst: 3
+              sd: 112233
+      supportDnnList:
+        - internet
+      nrfUri: http://f5gc-nrf:29510
+      security:
+        integrityOrder:
+          - NIA2
+        cipheringOrder:
+          - NEA0
+      networkName:
+        full: free5GC
+        short: free
+      locality: area1 # Name of the location where a set of AMF, SMF and UPFs are located
+      t3502Value: 720  # timer value (seconds) at UE side
+      t3512Value: 3600 # timer value (seconds) at UE side
+      non3gppDeregistrationTimerValue: 3240 # timer value (seconds) at UE side
+      t3513:
+        enable: true
+        expireTime: 6s
+        maxRetryTimes: 4
+      t3522:
+        enable: true  
+        expireTime: 6s 
+        maxRetryTimes: 4
+      t3550:
+        enable: true   
+        expireTime: 6s  
+        maxRetryTimes: 4 
+      t3560:
+        enable: true   
+        expireTime: 6s
+        maxRetryTimes: 4
+      t3565:
+        enable: true    
+        expireTime: 6s   
+
+    logger:
+      AMF:
+        debugLevel: info
+        ReportCaller: false
+      NAS:
+        debugLevel: info
+        ReportCaller: false
+      FSM:
+        debugLevel: info
+        ReportCaller: false
+      NGAP:
+        debugLevel: info
+        ReportCaller: false
+      Aper:
+        debugLevel: info
+        ReportCaller: false
+      PathUtil:
+        debugLevel: info
+        ReportCaller: false
+      OpenApi:
+        debugLevel: info
+        ReportCaller: false

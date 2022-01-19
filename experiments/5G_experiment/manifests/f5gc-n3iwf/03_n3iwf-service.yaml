@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: f5gc-n3iwf
+  name: f5gc-n3iwf
+spec:
+  type: ClusterIP
+  ports:
+  - name: f5gc-nrf
+    port: 29512 #TODO remove
+    protocol: TCP
+    targetPort: 29512
+  selector:
+    app: f5gc-n3iwf

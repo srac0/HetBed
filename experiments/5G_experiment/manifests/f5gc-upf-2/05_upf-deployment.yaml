@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f5gc-upf-2
+  labels:
+    app: f5gc-upf-2
+    sliceidx: 6d3d79da-f781-4cd9-813a-dbdad01e01c0
+  annotations:
+    free5gc.org/nssi-id: '27394d25-dbf5-428e-8fc3-f5b2add67115'
+    free5gc.org/nsi-ids: '[
+        { "id": "4e6db941-47d6-4fce-9c71-f7eb35a75d03" },
+    ]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f5gc-upf-2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: f5gc-upf-2
+      annotations:
+        "cni.projectcalico.org/ipAddrs": "[\"172.20.20.1\"]"
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      nodeSelector:
+        nodetype: upf
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "Edge"
+        effect: "NoSchedule"      
+      - key: "dedicated"
+        operator: "Equal"
+        value: "DC"
+        effect: "NoSchedule"
+      containers:
+        - name: f5gc-upf-2
+          image: ip-10-0-0-10:5000/free5gc-k8s/f5gc-upf:v3.0.6
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["NET_ADMIN", "NET_RAW", "NET_BIND_SERVICE", "SYS_TIME"]
+          volumeMounts:
+            - name: f5gc-upf-2-config
+              mountPath: /free5gc/config
+            - mountPath: /dev/net/tun
+              name: tun-devdir
+          ports:
+            - containerPort: 2152
+              name: f5gc-upf-2-n3
+              protocol: UDP
+            - containerPort: 8805
+              name: f5gc-upf-2-n4
+              protocol: UDP
+        - name: tcpdump
+          image: corfr/tcpdump
+          command:
+            - /bin/sleep
+            - infinity
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: f5gc-upf-2-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: f5gc-upf-2-config
+          configMap:
+            name: f5gc-upf-2-config
+        - name: tun-devdir
+          hostPath:
+            path: /dev/net/tun

@@ -1,0 +1,123 @@
+version: '3'
+
+services:
+  s-1:
+    build: .
+    container_name: "iperf3-s1"
+    ports:
+      - "5201:5201/tcp"
+    command: iperf3 -s
+  s-2:
+    build: .
+    container_name: "iperf3-s2"
+    ports:
+      - "5202:5202/tcp"
+    command: iperf3 -s -p 5202
+  s-3:
+    build: .
+    container_name: "iperf3-s3"
+    ports:
+      - "5203:5203/tcp"
+    command: iperf3 -s -p 5203
+  s-4:
+    build: .
+    container_name: "iperf3-s4"
+    ports:
+      - "5204:5204/tcp"
+    command: iperf3 -s -p 5204
+  s-5:
+    build: .
+    container_name: "iperf3-s5"
+    ports:
+      - "5205:5205/tcp"
+    command: iperf3 -s -p 5205
+  s-6:
+    build: .
+    container_name: "iperf3-s6"
+    ports:
+      - "5206:5206/tcp"
+    command: iperf3 -s -p 5206
+  s-7:
+    build: .
+    container_name: "iperf3-s7"
+    ports:
+      - "5207:5207/tcp"
+    command: iperf3 -s -p 5207
+  s-8:
+    build: .
+    container_name: "iperf3-s8"
+    ports:
+      - "5208:5208/tcp"
+    command: iperf3 -s -p 5208
+  s-9:
+    build: .
+    container_name: "iperf3-s9"
+    ports:
+      - "5209:5209/tcp"
+    command: iperf3 -s -p 5209
+  s-10:
+    build: .
+    container_name: "iperf3-s10"
+    ports:
+      - "5210:5210/tcp"
+    command: iperf3 -s -p 5210
+  s-11:
+    build: .
+    container_name: "iperf3-s11"
+    ports:
+      - "5211:5211/tcp"
+    command: iperf3 -s -p 5211
+  s-12:
+    build: .
+    container_name: "iperf3-s12"
+    ports:
+      - "5212:5212/tcp"
+    command: iperf3 -s -p 5212
+  s-13:
+    build: .
+    container_name: "iperf3-s13"
+    ports:
+      - "5213:5213/tcp"
+    command: iperf3 -s -p 5213
+  s-14:
+    build: .
+    container_name: "iperf3-s14"
+    ports:
+      - "5214:5214/tcp"
+    command: iperf3 -s -p 5214
+  s-15:
+    build: .
+    container_name: "iperf3-s15"
+    ports:
+      - "5215:5215/tcp"
+    command: iperf3 -s -p 5215
+  s-16:
+    build: .
+    container_name: "iperf3-s16"
+    ports:
+      - "5216:5216/tcp"
+    command: iperf3 -s -p 5216
+  s-17:
+    build: .
+    container_name: "iperf3-s17"
+    ports:
+      - "5217:5217/tcp"
+    command: iperf3 -s -p 5217
+  s-18:
+    build: .
+    container_name: "iperf3-s18"
+    ports:
+      - "5218:5218/tcp"
+    command: iperf3 -s -p 5218
+  s-19:
+    build: .
+    container_name: "iperf3-s19"
+    ports:
+      - "5219:5219/tcp"
+    command: iperf3 -s -p 5219
+  s-20:
+    build: .
+    container_name: "iperf3-s20"
+    ports:
+      - "5220:5220/tcp"
+    command: iperf3 -s -p 5220

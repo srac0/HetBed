@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: f5gc-mongodb
+spec:
+  serviceName: f5gc-mongodb
+  selector:
+    matchLabels:
+      app: f5gc-mongodb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: f5gc-mongodb
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "DC"
+        effect: "NoSchedule"
+      containers:
+      - name: mongodb
+        image: mongo:4.4.6
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        env:
+          - name: MONGO_INITDB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: f5gc-mongodb-config
+                key: mongo_initdb_database

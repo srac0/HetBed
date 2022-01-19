@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ueransim-ue
+  labels:
+    app: ueransim-ue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ueransim-ue
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ueransim-ue
+        exp: exp-03-ue
+      # annotations:
+      #   "cni.projectcalico.org/ipAddrs": "[\"172.16.50.0\"]"
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      nodeSelector:
+        nodetype: ue
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "UE"
+        effect: "NoSchedule"
+      containers:
+        - name: f5gc-ue
+          image: ip-10-0-0-10:5000/free5gc-k8s/ueransim:v3.2.6
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          # command: ["./build/nr-ue", "-c", "./config/free5gc-ue.yaml", "-n", "10" ] 
+          command: ["./build/nr-ue", "-c", "./config/free5gc-ue.yaml", "-n", "pool-size" ] # updated by ue-generator
+          tty: true
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["NET_ADMIN"]
+          volumeMounts:
+            - name: ueransim-ue-config
+              mountPath: /UERANSIM/config
+            #- mountPath: /dev/net/tun
+            #  name: tun-devdir
+          ports:
+            - containerPort: 38413
+              name: if-n1n2
+              protocol: SCTP
+
+        - name: tcpdump
+          image: corfr/tcpdump
+          command:
+            - /bin/sleep
+            - infinity
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: ueransim-ue-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: ueransim-ue-config
+          configMap:
+            name: ueransim-ue-config
+        - name: tun-devdir
+          hostPath:
+            path: /dev/net/tun
+

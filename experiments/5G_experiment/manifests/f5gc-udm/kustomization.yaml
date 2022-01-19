@@ -1,0 +1,18 @@
+resources:
+  - 00_udm-sa.yaml
+  - 01_udm-rbac.yaml
+  - 02_udm-configmap.yaml
+  - 03_udm-service.yaml
+  - 04_udm-deployment.yaml
+
+namespace: f5gc
+
+secretGenerator:
+- name: f5gc-udm-tls-secret
+  namespace: f5gc
+  files:
+  - cert/udm.pem
+  - cert/udm.key
+  type: "Opaque"
+generatorOptions:
+  disableNameSuffixHash: true

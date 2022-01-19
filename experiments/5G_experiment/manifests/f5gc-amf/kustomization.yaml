@@ -1,0 +1,18 @@
+resources:
+  - 00_amf-sa.yaml
+  - 01_amf-rbac.yaml
+  - 02_amf-configmap.yaml
+  - 03_amf-service.yaml
+  - 05_amf-deployment.yaml
+
+namespace: f5gc
+
+secretGenerator:
+- name: f5gc-amf-tls-secret
+  namespace: f5gc
+  files:
+  - cert/amf.pem
+  - cert/amf.key
+  type: "Opaque"
+generatorOptions:
+  disableNameSuffixHash: true

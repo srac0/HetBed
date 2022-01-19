@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ueransim-gnb-6
+  name: ueransim-gnb-6
+spec:
+  type: ClusterIP
+  ports:
+  - name: f5gc-gnb-n3
+    targetPort: 2152
+    port: 2152
+    protocol: UDP  
+  - name: f5gc-gnb-ue
+    targetPort: 4997
+    port: 4997
+    protocol: UDP
+  selector:
+    app: ueransim-gnb-6

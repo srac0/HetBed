@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: f5gc-smf-2
+  name: f5gc-smf-2
+spec:
+  type: ClusterIP
+  ports:
+  - name: f5gc-smf-2-sbi
+    port: 20503
+    protocol: TCP
+    targetPort: 20503
+  selector:
+    app: f5gc-smf-2

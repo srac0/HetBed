@@ -1,0 +1,18 @@
+resources:
+  - 00_udr-sa.yaml
+  - 01_udr-rbac.yaml
+  - 02_udr-configmap.yaml
+  - 03_udr-service.yaml
+  - 04_udr-deployment.yaml
+
+namespace: f5gc
+
+secretGenerator:
+- name: f5gc-udr-tls-secret
+  namespace: f5gc
+  files:
+  - cert/udr.pem
+  - cert/udr.key
+  type: "Opaque"
+generatorOptions:
+  disableNameSuffixHash: true

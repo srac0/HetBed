@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ueransim-gnb
+  labels:
+    app: ueransim-gnb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ueransim-gnb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ueransim-gnb
+      annotations:
+        "cni.projectcalico.org/ipAddrs": "[\"172.20.40.0\"]"
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      nodeSelector:
+        nodetype: gnb
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "gNB"
+        effect: "NoSchedule"
+      containers:
+        - name: ueransim-gnb
+          image: ip-10-0-0-10:5000/free5gc-k8s/ueransim:v3.2.6
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          command: ["./build/nr-gnb", "-c", "./config/free5gc-gnb.yaml"]
+          tty: true
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["NET_ADMIN"]
+          volumeMounts:
+            - name: ueransim-gnb-config
+              mountPath: /UERANSIM/config
+            #- mountPath: /dev/net/tun
+            #  name: tun-devdir
+          ports:
+            - containerPort: 2152
+              name: f5gc-gnb-n3
+              protocol: UDP            
+            - containerPort: 4997
+              name: f5gc-gnb-ue
+              protocol: UDP
+        # - name: ueransim-gnb-probe
+        #   image: nginx:latest
+        #   ports:
+        #     - containerPort: 80
+        #       name: http-probe
+        #       protocol: TCP
+        - name: tcpdump
+          image: corfr/tcpdump
+          command:
+            - /bin/sleep
+            - infinity
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: ueransim-gnb-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: ueransim-gnb-config
+          configMap:
+            name: ueransim-gnb-config
+        - name: tun-devdir
+          hostPath:
+            path: /dev/net/tun
+

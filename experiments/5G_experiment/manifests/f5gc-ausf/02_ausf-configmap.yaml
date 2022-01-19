@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5gc-ausf-config
+data:
+  ausfcfg.conf: |
+    info:
+      version: 1.0.0
+      description: AUSF initial local configuration
+    
+    configuration:
+      sbi:
+        scheme: http
+        registerIPv4: f5gc-ausf     # Can also be a kubernetes service IP or domain name.
+        bindingIPv4: 0.0.0.0      # Can also be an ENV.
+        port: 29509
+      serviceNameList:
+        - nausf-auth
+      nrfUri: http://f5gc-nrf:29510
+      plmnSupportList:
+        - mcc: 208
+          mnc: 93
+        - mcc: 123
+          mnc: 45
+      groupId: ausfGroup001  
+
+    logger:
+      AUSF:
+        debugLevel: info
+        ReportCaller: false
+      PathUtil:
+        debugLevel: info
+        ReportCaller: false
+      OpenApi:
+        debugLevel: info
+        ReportCaller: false

@@ -1,0 +1,9 @@
+resources:
+  - 00_ueransim-ue-sa.yaml
+  - 01_ueransim-ue-rbac.yaml
+  - 02_ueransim-ue-configmap.yaml
+  - 03_ueransim-ue-service.yaml
+  - 04_ueransim-ue-multus.yaml
+  - 05_ueransim-ue-deployment.yaml
+
+namespace: f5gc

@@ -1,0 +1,18 @@
+resources:
+  - 00_nrf-sa.yaml
+  - 01_nrf-rbac.yaml
+  - 02_nrf-configmap.yaml
+  - 03_nrf-service.yaml
+  - 04_nrf-deployment.yaml
+
+namespace: f5gc
+
+secretGenerator:
+- name: f5gc-nrf-tls-secret
+  namespace: f5gc
+  files:
+  - cert/nrf.pem
+  - cert/nrf.key
+  type: "Opaque"
+generatorOptions:
+  disableNameSuffixHash: true

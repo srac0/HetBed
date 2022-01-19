@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5gc-upf-2-config
+data:
+  upfcfg.yaml: |
+    info:
+      version: 1.0.0
+      description: UPF configuration
+    
+    configuration:
+      # debugLevel: panic|fatal|error|warn|info|debug|trace
+      debugLevel: info
+      # ReportCaller: true|false
+      ReportCaller: false
+    
+      pfcp:
+        - addr: 172.20.20.1 #N4 upf-2
+    
+      gtpu:
+        - addr: 172.20.20.1 #N3 upf-2
+        # [optional] gtpu.name
+        # - name: upf.5gc.nctu.me
+        # [optional] gtpu.ifname
+        # - ifname: gtpif
+    
+      dnn_list:
+        - dnn: internet
+          cidr: 60.61.0.0/16
+          # [optional] apn_list[*].natifname
+          # natifname: eth0
+
+  start_upf.sh: |
+    #! /bin/bash
+    # connect upf to the DN
+    sysctl -w net.ipv4.ip_forward=1
+    iptables -t nat -A POSTROUTING -o eth0  -j MASQUERADE
+    iptables -I FORWARD 1 -j ACCEPT
+    # run upf
+    ./free5gc-upfd -f ../config/upfcfg.yaml
+

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ueransim-gnb-4-config
+data:
+  free5gc-gnb.yaml: |
+    mcc: '208'          # Mobile Country Code value
+    mnc: '93'           # Mobile Network Code value (2 or 3 digits)
+    
+    nci: '0x000000013'  # NR Cell Identity (36-bit)
+    idLength: 32        # NR gNB ID length in bits [22...32]
+    tac: 1              # Tracking Area Code
+    
+    linkIp: 172.20.40.3 # gNB's local IP address for Radio Link Simulation (Usually same with local IP)
+    ngapIp: 172.20.40.3 # gNB's local IP address for N2 Interface (Usually same with local IP)
+    gtpIp: 172.20.40.3 # gNB's local IP address for N3 Interface (Usually same with local IP)
+    
+    # List of AMF address information
+    amfConfigs:
+      - address: 172.20.10.0 # amf
+        port: 38412
+    
+    # List of supported S-NSSAIs by this gNB
+    slices:
+      - sst: 0x1
+        sd: 0x010203
+      - sst: 0x2
+        sd: 0x112233
+    
+    # Indicates whether or not SCTP stream number errors should be ignored.
+    ignoreStreamIds: true
+

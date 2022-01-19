@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+metadata:
+  name: f5gc-smf
+kind: Deployment
+spec:
+  template:
+    spec:
+      nodeSelector:
+        nodetype: cloudlet

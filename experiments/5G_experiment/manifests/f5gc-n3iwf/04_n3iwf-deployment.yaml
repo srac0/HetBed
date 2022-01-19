@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f5gc-n3iwf
+  labels:
+    app: f5gc-n3iwf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f5gc-n3iwf
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: f5gc-n3iwf
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: f5gc-n3iwf
+          image: ip-10-0-0-10:5000/free5gc-k8s/f5gc-n3iwf:v3.0.6
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            capabilities:
+              add: ["NET_ADMIN"]
+          volumeMounts:
+            - name: f5gc-n3iwf-config
+              mountPath: /free5gc/config
+            - name: f5gc-n3iwf-cert
+              mountPath: /free5gc/support/TLS
+          ports:
+            - containerPort: 29512
+              name: f5gc-nrf
+              protocol: TCP
+        - name: tcpdump
+          image: corfr/tcpdump
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sleep
+            - infinity
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: f5gc-n3iwf-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: f5gc-n3iwf-cert
+          secret:
+            secretName: f5gc-n3iwf-tls-secret
+        - name: f5gc-n3iwf-config
+          configMap:
+            name: f5gc-n3iwf-config
+            defaultMode: 0755

@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f5gc-ueueransim
+  labels:
+    app: f5gc-ueueransim
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f5gc-ueueransim
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: f5gc-ueueransim
+      annotations:
+        k8s.v1.cni.cncf.io/networks: f5gc-ueueransim-n1n2
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: f5gc-ueueransim
+          image: ip-10-0-0-10:5000/free5gc-k8s/ueransim:v3.2.6
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          command: ["./build/nr-ue", "-c", "./config/free5gc-ue.yaml" ]
+          tty: true
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["NET_ADMIN"]
+          volumeMounts:
+            - name: f5gc-ueueransim-config
+              mountPath: /UERANSIM/config
+            #- mountPath: /dev/net/tun
+            #  name: tun-devdir
+          ports:
+            - containerPort: 38413
+              name: if-n1n2
+              protocol: SCTP
+
+        # - name: f5gc-ueueransim-probe
+        #   image: nginx:latest
+        #   ports:
+        #     - containerPort: 80
+        #       name: http-probe
+        #       protocol: TCP
+        - name: tcpdump
+          image: corfr/tcpdump
+          command:
+            - /bin/sleep
+            - infinity
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: f5gc-ueueransim-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: f5gc-ueueransim-config
+          configMap:
+            name: f5gc-ueueransim-config
+        - name: tun-devdir
+          hostPath:
+            path: /dev/net/tun
+

@@ -1,0 +1,4 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ueransim-gnb-5-sa

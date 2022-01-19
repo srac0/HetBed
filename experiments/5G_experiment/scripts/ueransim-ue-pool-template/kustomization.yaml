@@ -1,0 +1,8 @@
+resources:
+  - 00_ueransim-pool-ue-sa.yaml
+  - 01_ueransim-pool-ue-rbac.yaml
+  - 02_ueransim-pool-ue-configmap.yaml
+  - 03_ueransim-pool-ue-service.yaml
+  - 05_ueransim-pool-ue-deployment.yaml
+
+namespace: f5gc

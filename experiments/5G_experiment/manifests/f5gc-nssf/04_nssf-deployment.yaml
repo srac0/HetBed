@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f5gc-nssf
+  labels:
+    app: f5gc-nssf
+  annotations:
+    free5gc.org/nssi-id: '27394d25-dbf5-428e-8fc3-f5b2add67115'
+    free5gc.org/nsi-ids: '[
+        { "id": "4e6db941-47d6-4fce-9c71-f7eb35a75d03" },
+    ]'
+    free5gc.org/supported-snssais: '[
+        { "st": 1,
+          "ssd": "010203",
+        },
+        { "st": 1,
+          "ssd": "112233",
+        },
+    ]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: f5gc-nssf
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: f5gc-nssf
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "DC"
+        effect: "NoSchedule"
+      containers:
+        - name: f5gc-nssf
+          image: ip-10-0-0-10:5000/free5gc-k8s/f5gc-nssf:v3.0.6
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          securityContext:
+            privileged: false
+            capabilities:
+              add: ["NET_ADMIN"]
+          volumeMounts:
+            - name: f5gc-nssf-config
+              mountPath: /free5gc/config
+            - name: f5gc-nssf-cert
+              mountPath: /free5gc/support/TLS
+          ports:
+            - containerPort: 29531
+              name: f5gc-nssf
+              protocol: TCP
+        - name: tcpdump
+          image: corfr/tcpdump
+          command:
+            - /bin/sleep
+            - infinity
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: f5gc-nssf-sa
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: f5gc-nssf-cert
+          secret:
+            secretName: f5gc-nssf-tls-secret
+        - name: f5gc-nssf-config
+          configMap:
+            name: f5gc-nssf-config

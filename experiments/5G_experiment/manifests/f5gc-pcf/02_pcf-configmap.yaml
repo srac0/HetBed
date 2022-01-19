@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5gc-pcf-config
+data:
+  pcfcfg.conf: |
+    info:
+      version: 1.0.0
+      description: PCF initial local configuration
+    
+    configuration:
+      pcfName: PCF
+      sbi:
+        scheme: http
+        registerIPv4: f5gc-pcf     # Can also be a kubernetes service IP or domain name.
+        bindingIPv4: 0.0.0.0      # Can also be an ENV.
+        port: 29507
+      timeFormat: 2019-01-02 15:04:05
+      defaultBdtRefId: BdtPolicyId-
+      nrfUri: http://f5gc-nrf:29510
+      serviceList:
+        - serviceName: npcf-am-policy-control
+        - serviceName: npcf-smpolicycontrol
+          suppFeat: 3fff
+        - serviceName: npcf-bdtpolicycontrol
+        - serviceName: npcf-policyauthorization
+          suppFeat: 3
+        - serviceName: npcf-eventexposure
+        - serviceName: npcf-ue-policy-control
+      mongodb:
+        name: free5gc
+        url: mongodb://f5gc-mongodb:27017
+
+    logger:
+      PCF:
+        debugLevel: info
+        ReportCaller: false
+      PathUtil:
+        debugLevel: info
+        ReportCaller: false
+      OpenApi:
+        debugLevel: info
+        ReportCaller: false
+  

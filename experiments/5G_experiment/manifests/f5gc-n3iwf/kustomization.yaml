@@ -1,0 +1,18 @@
+resources:
+  - 00_n3iwf-sa.yaml
+  - 01_n3iwf-rbac.yaml
+  - 02_n3iwf-configmap.yaml
+  - 03_n3iwf-service.yaml
+  - 04_n3iwf-deployment.yaml
+
+namespace: f5gc
+
+secretGenerator:
+- name: f5gc-n3iwf-tls-secret
+  namespace: f5gc
+  files:
+  - cert/n3iwf.pem
+  - cert/n3iwf.key
+  type: "Opaque"
+generatorOptions:
+  disableNameSuffixHash: true

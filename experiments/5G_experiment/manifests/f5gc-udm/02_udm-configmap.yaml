@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: f5gc-udm-config
+data:
+  udmcfg.conf: |
+    info:
+      version: 1.0.1
+      description: UDM initial local configuration
+    
+    configuration:
+      serviceNameList:
+        - nudm-sdm
+        - nudm-uecm
+        - nudm-ueau
+        - nudm-ee
+        - nudm-pp
+      sbi:
+        scheme: http
+        registerIPv4: f5gc-udm     # Can also be a kubernetes service IP or domain name.
+        bindingIPv4: 0.0.0.0      # Can also be an ENV.
+        port: 29503
+        tls:
+          log: free5gc/udmsslkey.log
+          pem: free5gc/support/TLS/udm.pem
+          key: free5gc/support/TLS/udm.key
+      nrfUri: http://f5gc-nrf:29510
+    
+    # test data set from TS33501-f60 Annex C.4
+    SuciProfile:
+      - ProtectionScheme: 1 # Protect Scheme: Profile A
+        PrivateKey: c53c22208b61860b06c62e5406a7b330c2b577aa5558981510d128247d38bd1d
+        PublicKey: 5a8d38864820197c3394b92613b20b91633cbd897119273bf8e4a6f4eec0a650
+      - ProtectionScheme: 2 # Protect Scheme: Profile B
+        PrivateKey: F1AB1074477EBCC7F554EA1C5FC368B1616730155E0041AC447D6301975FECDA
+        PublicKey: 0472DA71976234CE833A6907425867B82E074D44EF907DFB4B3E21C1C2256EBCD15A7DED52FCBB097A4ED250E036C7B9C8C7004C4EEDC4F068CD7BF8D3F900E3B4
+    logger:
+      UDM:
+        debugLevel: info
+        ReportCaller: false
+      OpenApi:
+        debugLevel: info
+        ReportCaller: false
+      PathUtil:
+        debugLevel: info
+        ReportCaller: false
